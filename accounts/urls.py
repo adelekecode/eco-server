@@ -11,7 +11,7 @@ urlpatterns = [
     path('auth/', include(router.urls)),
     # path('auth/', include('social_auth.urls')),
     # path('auth/admin/', views.AdminListCreateView().as_view()),
-    path('auth/', views.user_auth, name="login_view"),
+    path('auth/token/', views.user_auth, name="login_view"),
     path("auth/logout/", views.logout_view, name="logout_view"),
     path('auth/verify/', views.otp_verification),
 
