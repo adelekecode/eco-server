@@ -3,7 +3,7 @@ import requests
 
 
 
-key = 'sk_5ba9a3ae97708617c4ee42f25d72320d4cc5f67ccc8bec6a'
+key = 'sk_26de7a9edc831dabcb28b17ae9615f21ed518d5938e3a966'
 
 
 def auth_otp(email, otp):
@@ -15,10 +15,10 @@ def auth_otp(email, otp):
             "Authorization": f"Bearer {key}" 
         },
         json={
-            "event": 'auth',
+            "event": 'otp_auth',
             "email": email,
             "data": {
-                "otp": otp,
+                "code": otp,
                 }
             }
     )

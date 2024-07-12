@@ -28,19 +28,6 @@ import os
 User = get_user_model()
 
 
-
-def get_query():
-    
-    """returns query to be used to in the permissions view"""
-    
-    exclude_words = [ "activationotp", "activitylog", "moduleaccess", "logentry","group", "permission", "contenttype", "userinbox", "validationotp", "session", "blacklistedtoken", "outstandingtoken", "cart", ]
-    
-    query = Q()
-    for word in exclude_words:
-        query |= Q(codename__icontains=word)
-        
-    return query
-    
     
     
 
