@@ -49,6 +49,7 @@ def get_query():
 @api_view([ 'POST'])
 def user_auth(request):
     
+    """Allows users to log in to the platform. Sends the jwt refresh and access tokens. Check settings for token life time."""
     
     if request.method == "POST":
         serializer = LoginSerializer(data=request.data)

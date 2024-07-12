@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.db import models
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
@@ -10,11 +12,14 @@ from django.forms import model_to_dict
 from .managers import UserManager
 import uuid
 import random
-from django.contrib.auth.models import Group as DjangoGroup
+
+
+
+
+
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    
     
     ROLE_CHOICES = (
         ('admin', 'Admin'),
@@ -45,10 +50,9 @@ class User(AbstractBaseUser, PermissionsMixin):
                                                                                          ('google',"google")))
     
     
-    objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['id', 'role',]
+    REQUIRED_FIELDS = ['id','first_name', 'last_name', 'role', 'phone', ]
     
     class Meta:
         verbose_name = _('user')
@@ -56,6 +60,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f"{self.email} -- {self.role}"
+    
     
     
     @property
@@ -131,6 +136,7 @@ class ActivationOtp(models.Model):
         """
         
         return bool(self.expiry_date > timezone.now())
+
 
 
 class ActivityLog(models.Model):
