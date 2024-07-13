@@ -256,17 +256,17 @@ def join_team(self, request):
             return Response({"error": "you can't join more than two teams"}, status=400)
 
         
-        team = Teams.objects.filter(key=key, is_deleted=False).first()
+        team = Teams.objects.filter(key=key, is_deleted=False)
         if team is None:
             return Response({"error": "invalid key"}, status=400)
         
-        if team.users.filter(id=request.user.id).exists():
+        if team[0].users.filter(id=request.user.id).exists():
             return Response({"error": "you're already a member of this team"}, status=400)
         
-        if team.users.count() >= 10:
+        if team[0].users.count() >= 10:
             return Response({"error": "team is full"}, status=400)
         
-        team.users.add(request.user)
-        team.save()
+        team[0].users.add(request.user)
+        team[0].save()
         
         return Response({"message": "success"}, status=200)
