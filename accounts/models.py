@@ -8,7 +8,7 @@ from django.core.validators import RegexValidator
 from django.utils import timezone
 from django.core.validators import MinLengthValidator, FileExtensionValidator
 from django.forms import model_to_dict
-
+from django.utils.text import slugify
 from .managers import UserManager
 import uuid
 import random
@@ -46,6 +46,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_deleted    = models.BooleanField(_('deleted'), default=False)
     date_joined   = models.DateTimeField(_('date joined'), auto_now_add=True)
     fcm_token = models.TextField(null=True)
+    points = models.IntegerField(default=0)
+    teams = models.IntegerField(default=0)
     provider = models.CharField(_('provider'), max_length=255, default="email", choices=(('email',"email"),
                                                                                          ('google',"google")))
     
@@ -167,7 +169,43 @@ class ActivityLog(models.Model):
         
         
     def __str__(self):
-        return f"{self.user.first_name} {self.user.last_name} {self.action}"
+        return f"{self.user.first_name} {self.user.last_name} -- {self.action}"
     
+
+
+class Teams(models.Model):
+
+    id = models.UUIDField(primary_key=True, unique=True, editable=False, default=uuid.uuid4)
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True)
+    key = models.CharField(max_length=255, unique=True)
+    description = models.TextField(null=True)
+    users = models.ManyToManyField(User, related_name="team_users", blank=True)
+    is_deleted = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+
     
+
+
+
+
+class ScanCount(models.Model):
+
+    id = models.UUIDField(primary_key=True, unique=True, editable=False, default=uuid.uuid4)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    team = models.ForeignKey(Teams, on_delete=models.CASCADE, null=True)
+
+    count = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_deleted = models.BooleanField(default=False)
+
+
     

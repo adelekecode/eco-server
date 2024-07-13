@@ -7,10 +7,10 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from drf_yasg.utils import swagger_auto_schema
 from django.contrib.auth import get_user_model
 from .helpers.generators import generate_password
-from rest_framework.exceptions import PermissionDenied, AuthenticationFailed, NotFound, ValidationError
+from rest_framework.exceptions import *
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate, logout
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 from rest_framework.decorators import action
@@ -19,6 +19,8 @@ from .emails import *
 from rest_framework.views import APIView
 from django.contrib.auth.hashers import check_password
 from django.db.models import Q
+import random
+import string
 import requests
 import os
 
@@ -27,6 +29,24 @@ import os
  
 User = get_user_model()
 
+
+
+
+class CustomUserViewSet(UserViewSet):
+    queryset = User.objects.filter(is_deleted=False)
+    authentication_classes = [JWTAuthentication]
+    
+    def list(self, request, *args, **kwargs):
+        queryset = self.queryset.filter(role="user")
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_Response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+
+        return Response(serializer.data)
 
     
     
@@ -166,3 +186,80 @@ def otp_verification(request):
 
             return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
+
+def gen_key(n):
+    
+    alphabet = string.ascii_letters
+    code = ''.join(random.choice(alphabet) for i in range(n))
+    return code
+
+
+class TeamView(APIView):
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(method='post', request_body=TeamSerializer())
+    @action(detail=True, methods=['post'])
+    def post(self, request):
+        serializer = TeamSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        if request.user.teams >= 2:
+
+
+            serializer.validated_data['key'] = gen_key(4)
+            team = serializer.create(serializer.validated_data)
+
+            team.users.set([request.user])
+            team.save()
+            request.user.teams += 1
+            request.user.save()
+            
+
+            return Response({"message": "success"}, status=200)
+        else:
+            return Response({"error": "you can't be in more than two teams"}, status=400)
+        
+
+class UserTeamsView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+
+    def get(self, request):
+        teams = Teams.objects.filter(users__id=request.user.id, is_deleted=False)
+
+        serializer = TeamSerializer(teams, many=True)
+        return Response(serializer.data)
+    
+
+class JoinTeamView(APIView):
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+
+        key = request.GET.get('key', None)
+        if key is None:
+            return Response({"error": "key is required"}, status=400)
+        
+        if request.user.team >= 2:
+            return Response({"error": "you can't join more than two teams"}, status=400)
+
+        
+        team = Teams.objects.filter(key=key, is_deleted=False).first()
+        if team is None:
+            return Response({"error": "invalid key"}, status=400)
+        
+        if team.users.filter(id=request.user.id).exists():
+            return Response({"error": "you're already a member of this team"}, status=400)
+        
+        if team.users.count() >= 10:
+            return Response({"error": "team is full"}, status=400)
+        
+        team.users.add(request.user)
+        team.save()
+        
+        return Response({"message": "success"}, status=200)

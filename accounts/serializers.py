@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
-from .models import ActivationOtp
+from .models import *
 from .signals import generate_otp
 from rest_framework.exceptions import ValidationError
 from django.contrib.auth.models import Permission, Group
@@ -23,7 +23,7 @@ User = get_user_model()
 class UserRegistrationSerializer(BaseUserRegistrationSerializer):
     
     class Meta(BaseUserRegistrationSerializer.Meta):
-        fields = ['id',"first_name", "last_name", "email", "role","phone", "password", "is_active"]
+        fields = ['id', "first_name", "last_name", "email", "role","phone", "password", "is_active"]
         
     
 class UserDeleteSerializer(serializers.Serializer):
@@ -35,7 +35,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     
     class Meta():
         model = User
-        fields = ['id',"first_name", "last_name", "email", "phone", "is_active", "role", "is_superuser", "date_joined"]
+        fields = ['id',"first_name", "last_name", "email", "is_active", "role", "is_superuser", "date_joined"]
 
 
 class LoginSerializer(serializers.Serializer):
@@ -113,3 +113,27 @@ class NewOtpSerializer(serializers.Serializer):
         
         return {'message': 'Please check your email for OTP.'}
     
+
+
+
+
+
+class TeamSerializer(serializers.ModelSerializer):
+
+
+    class Meta:
+        models = Teams
+        fields = "__all__"
+
+
+    def create(self, validated_data):
+        team = Teams.objects.create(**validated_data)
+        return team
+
+
+class ScanCountSerializer(serializers.ModelSerializer):
+
+
+    class Meta:
+        model = ScanCount
+        fields = "__all__"
