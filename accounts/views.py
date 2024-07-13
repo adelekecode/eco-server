@@ -245,7 +245,7 @@ def user_teams(request):
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
-def join_team(self, request):
+def join_team(request):
     if request.method == 'POST':
 
         key = request.GET.get('key', None)
@@ -270,3 +270,24 @@ def join_team(self, request):
         team[0].save()
         
         return Response({"message": "success"}, status=200)
+
+
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def leave_team(request, pk):
+    if request.method == 'POST':
+        try:
+            team = Teams.objects.get(id=pk, is_deleted=False)
+        except Teams.DoesNotExist:
+            return Response({"error": "team not found"}, status=400)
+        
+        if not team.users.filter(id=request.user.id).exists():
+            return Response({"error": "you're not a member of this team"}, status=400)
+        
+        team.users.remove(request.user)
+        team.save()
+        
+        return Response({"message": "success"}, status=200)
+
