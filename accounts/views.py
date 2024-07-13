@@ -32,6 +32,14 @@ User = get_user_model()
 
 
 
+def gen_key(n):
+    
+    alphabet = string.ascii_letters
+    code = ''.join(random.choice(alphabet) for i in range(n))
+    return code
+
+
+
 class CustomUserViewSet(UserViewSet):
     queryset = User.objects.filter(is_deleted=False)
     authentication_classes = [JWTAuthentication]
@@ -187,24 +195,18 @@ def otp_verification(request):
             return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 
-def gen_key(n):
-    
-    alphabet = string.ascii_letters
-    code = ''.join(random.choice(alphabet) for i in range(n))
-    return code
-
 
 class TeamView(APIView):
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
-    @swagger_auto_schema(method='post', request_body=TeamSerializer())
+    @swagger_auto_schema(method='POST', request_body=TeamSerializer())
     def post(self, request):
         serializer = TeamSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        if request.user.teams >= 2:
+        if not request.user.teams >= 2:
 
 
             serializer.validated_data['key'] = gen_key(4)
