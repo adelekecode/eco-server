@@ -16,9 +16,9 @@ urlpatterns = [
     path('auth/token/', views.user_auth, name="login_view"),
     path("auth/logout/", views.logout_view, name="logout_view"),
     path('auth/verify/', views.otp_verification),
-    path('teams/', views.TeamView.as_view()),
-    path('teams/user/join/', views.JoinTeamView.as_view()),
-    path('teams/users/', views.UserTeamsView.as_view()),
+    path('teams/', views.teams_view),
+    path('teams/user/join/', views.join_team),
+    path('teams/users/', views.user_teams),
 
 
 ]

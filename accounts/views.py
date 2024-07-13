@@ -196,12 +196,11 @@ def otp_verification(request):
 
 
 
-class TeamView(APIView):
-
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def teams_view(request):
+    if request.method == 'POST':
         serializer = TeamSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -220,26 +219,25 @@ class TeamView(APIView):
             return Response({"message": "success"}, status=200)
         else:
             return Response({"error": "you can't be in more than two teams"}, status=400)
-        
+ 
 
-class UserTeamsView(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def user_teams(self, request):
+    if request.method == 'GET':
 
-
-    def get(self, request):
         teams = Teams.objects.filter(users__id=request.user.id, is_deleted=False)
 
         serializer = TeamSerializer(teams, many=True)
         return Response(serializer.data)
     
 
-class JoinTeamView(APIView):
-
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def join_team(self, request):
+    if request.method == 'POST':
 
         key = request.GET.get('key', None)
         if key is None:
