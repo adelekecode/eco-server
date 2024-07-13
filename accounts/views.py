@@ -20,6 +20,7 @@ from rest_framework.views import APIView
 from django.contrib.auth.hashers import check_password
 from django.db.models import Q
 import random
+from django.utils.text import slugify
 import string
 import requests
 import os
@@ -203,6 +204,13 @@ def teams_view(request):
     if request.method == 'POST':
         serializer = TeamSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+
+        name = serializer.validated_data['name']
+        slug = slugify(name)
+
+        if Teams.objects.filter(slug=slug).exists():
+            return Response({"error": "team with this name already exists"}, status=400)
+
 
         if not request.user.teams >= 2:
 
