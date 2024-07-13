@@ -233,7 +233,7 @@ def teams_view(request):
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
-def user_teams(self, request):
+def user_teams(request):
     if request.method == 'GET':
 
         teams = Teams.objects.filter(users__id=request.user.id, is_deleted=False)
