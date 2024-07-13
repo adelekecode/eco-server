@@ -195,7 +195,7 @@ def otp_verification(request):
             return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 
-# @swagger_auto_schema(methods=['POST'], request_body=TeamSerializer())
+@swagger_auto_schema(methods=['POST'], request_body=TeamSerializer())
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])

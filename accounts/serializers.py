@@ -122,7 +122,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
 
     class Meta:
-        models = Teams
+        model = Teams
         fields = "__all__"
 
 
