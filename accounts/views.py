@@ -200,7 +200,6 @@ class TeamView(APIView):
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(method='post', request_body=TeamSerializer())
-    @action(detail=True, methods=['post'])
     def post(self, request):
         serializer = TeamSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
