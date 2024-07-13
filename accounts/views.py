@@ -37,7 +37,7 @@ def gen_key(n):
     
     alphabet = string.ascii_letters
     code = ''.join(random.choice(alphabet) for i in range(n))
-    return code
+    return str(code).lower()
 
 
 
