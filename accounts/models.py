@@ -177,8 +177,8 @@ class Teams(models.Model):
 
     id = models.UUIDField(primary_key=True, unique=True, editable=False, default=uuid.uuid4)
     name = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255, unique=True)
-    key = models.CharField(max_length=255, unique=True)
+    slug = models.SlugField(max_length=255, unique=True, null=True)
+    key = models.CharField(max_length=255, unique=True, null=True)
     description = models.TextField(null=True)
     users = models.ManyToManyField(User, related_name="team_users_group", blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name="team_owner")
