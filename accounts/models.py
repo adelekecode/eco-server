@@ -181,7 +181,7 @@ class Teams(models.Model):
     key = models.CharField(max_length=255, unique=True)
     description = models.TextField(null=True)
     users = models.ManyToManyField(User, related_name="team_users_group", blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name="team_owner")
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
