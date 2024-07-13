@@ -18,7 +18,7 @@ urlpatterns = [
     path('auth/verify/', views.otp_verification),
     path('teams/', views.TeamView.as_view()),
     path('teams/user/join/', views.JoinTeamView.as_view()),
-    path('teams/', views.UserTeamsView.as_view()),
+    path('teams/users/', views.UserTeamsView.as_view()),
 
 
 ]
