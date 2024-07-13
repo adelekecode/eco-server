@@ -201,7 +201,7 @@ class TeamView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
-    @swagger_auto_schema(method='POST', request_body=TeamSerializer())
+    @swagger_auto_schema(request_body=TeamSerializer())
     def post(self, request):
         serializer = TeamSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
