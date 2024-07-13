@@ -208,6 +208,7 @@ def teams_view(request):
 
 
             serializer.validated_data['key'] = gen_key(4)
+            serializer.validated_data['user'] = request.user
             team = serializer.create(serializer.validated_data)
 
             team.users.set([request.user])
