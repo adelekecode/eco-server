@@ -1,5 +1,6 @@
 from rest_framework_simplejwt.token_blacklist import models, admin
 from django.contrib.admin import AdminSite
+from .models import ScanCount, Teams
 
 class CustomOutstandingTokenAdmin(admin.OutstandingTokenAdmin):
     
@@ -17,8 +18,26 @@ from django.contrib.auth.models import Permission
 class Users(admin.ModelAdmin):
     list_display = ["email", "role", "is_active", ]
     list_editable = ["is_active"]
+
+
+class TeamsAdmin(admin.ModelAdmin):
+    list_display = ["name", "owner", "users", "key", "description", "created_by", "created_at"]
+
+
+    def owner(self, obj):
+
+        return obj.user.email
+    
+    owner.short_description = "Owner's Email"
+
+    def users(self, obj):
+        return ", ".join([user.email for user in obj.users.all()])
+    
+    users.short_description = "Users' Emails"
     
     
 admin.site.unregister(models.OutstandingToken)
 admin.site.register(models.OutstandingToken, CustomOutstandingTokenAdmin)
+
+admin.site.register(Teams, TeamsAdmin)
 

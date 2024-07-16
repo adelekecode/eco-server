@@ -73,6 +73,8 @@ def user_auth(request):
             data = serializer.validated_data
             email = data['email']
             if User.objects.filter(email=email).exists():
+                if not User.objects.filter(email=email, is_active=True).exists():
+                    return Response({"error": "user is not active"}, status=400)
 
                 code = generate_otp(6)
                 user = User.objects.get(email=email)
