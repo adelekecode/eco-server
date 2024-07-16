@@ -36,8 +36,8 @@ SECRET_KEY = os.getenv('DJANGO_SECRET')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['server.eco-hero-app.com', 'localhost', '127.0.0.1']
-CSRF_TRUSTED_ORIGINS = ['https://server.eco-hero-app.com', 'http://localhost', 'http://127.0.0.1']
+ALLOWED_HOSTS = ['server.eco-hero-app.com', 'admin.eco-hero-app.com', 'localhost', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://server.eco-hero-app.com', 'http://localhost', 'http://127.0.0.1', 'https://admin.eco-hero-app.com']
 
 
 
