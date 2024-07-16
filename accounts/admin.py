@@ -31,10 +31,9 @@ class TeamsAdmin(admin.ModelAdmin):
     owner.short_description = "Owner's Email"
 
     def users(self, obj):
-        return ", ".join([user.email for user in obj.users.all()])
+        return obj.users.all().count()
     
-    users.short_description = "Users' Emails"
-    
+    users.short_description = "Number of Users"    
     
 admin.site.unregister(models.OutstandingToken)
 admin.site.register(models.OutstandingToken, CustomOutstandingTokenAdmin)
