@@ -10,10 +10,11 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         
         email = input("Email:\n>")
-        phone = input("Phone:\n>")
         password = input("Password:\n>")
         
         
-        User.objects.create_superuser(email=email, password=password, phone=phone)
+        user = User.objects.create(email=email, is_admin=True, is_staff=True, is_active=True, role="admin", is_superuser=True)
+        user.set_password(password)
+        user.save()
         
         self.stdout.write(self.style.SUCCESS("Successfully added superuser"))

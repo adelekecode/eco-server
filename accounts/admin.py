@@ -14,8 +14,8 @@ from django.contrib.auth.models import Permission
     
     
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-    list_display = ["email", "role", "is_active", "is_admin"]
+class Users(admin.ModelAdmin):
+    list_display = ["email", "role", "is_active", ]
     list_editable = ["is_active"]
     
     
