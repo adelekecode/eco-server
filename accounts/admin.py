@@ -21,7 +21,7 @@ class Users(admin.ModelAdmin):
 
 
 class TeamsAdmin(admin.ModelAdmin):
-    list_display = ["name", "owner", "users", "key", "description", "created_by", "created_at"]
+    list_display = ["name", "owner", "users", "key", "description", "created_at", "updated_at"]
 
 
     def owner(self, obj):
