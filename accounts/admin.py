@@ -31,7 +31,7 @@ class TeamsAdmin(admin.ModelAdmin):
     owner.short_description = "Owner's Email"
 
     def owners(self, obj):
-        return len(obj.users) if obj.users else 0
+        return obj.users.all().count if obj.users else 0
     
     owners.short_description = "Number of Users"    
     
