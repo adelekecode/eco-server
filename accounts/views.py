@@ -287,6 +287,8 @@ def leave_team(request, pk):
             return Response({"error": "you're not a member of this team"}, status=400)
         
         team.users.remove(request.user)
+        request.user.teams -= 1
+        request.user.save()
         team.save()
         
         return Response({"message": "success"}, status=200)
