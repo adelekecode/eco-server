@@ -51,6 +51,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     provider = models.CharField(_('provider'), max_length=255, default="email", choices=(('email',"email"),
                                                                                          ('google',"google")))
     
+    objects = UserManager()
+
+    
     
 
     USERNAME_FIELD = 'email'
