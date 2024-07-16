@@ -21,7 +21,7 @@ class Users(admin.ModelAdmin):
 
 
 class TeamsAdmin(admin.ModelAdmin):
-    list_display = ["name", "owner", "users", "key", "description", "created_at", "updated_at"]
+    list_display = ["name", "owner", "owners", "key", "description", "created_at", "updated_at"]
 
 
     def owner(self, obj):
@@ -30,10 +30,10 @@ class TeamsAdmin(admin.ModelAdmin):
     
     owner.short_description = "Owner's Email"
 
-    def users(self, obj):
-        return len(obj.users)
+    def owners(self, obj):
+        return len(obj.users) if obj.users else 0
     
-    users.short_description = "Number of Users"    
+    owners.short_description = "Number of Users"    
     
 admin.site.unregister(models.OutstandingToken)
 admin.site.register(models.OutstandingToken, CustomOutstandingTokenAdmin)
