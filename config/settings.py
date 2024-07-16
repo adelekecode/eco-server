@@ -143,20 +143,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-##AWS S3 settings
-
-AWS_ACCESS_KEY_ID = os.getenv("AWS_Access_Key")
-AWS_SECRET_ACCESS_KEY = os.getenv("AWS_Secret_Access_Key")
-AWS_S3_REGION_NAME = os.getenv("AWS_Storage_Region")
-AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_Storage_Bucket_Name")
-# AWS_S3_CUSTOM_DOMAIN = "d1cc9gva10xzzu.cloudfront.net"
-# AWS_CLOUDFRONT_KEY_ID = os.getenv("AWS_Cloudfront_Key_ID")
-# AWS_CLOUDFRONT_KEY = str(os.getenv("AWS_Cloudfront_Private_Key").encode('utf-8').strip())
-# print(AWS_CLOUDFRONT_KEY)
-
-AWS_QUERYSTRING_EXPIRE = 180
 
 
 # Default primary key field type
@@ -325,10 +313,10 @@ JAZZMIN_SETTINGS = {
     "site_title": "Admin",
 
     # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_header": "Crow",
+    "site_header": "EcoHero Admin",
 
     # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_brand": "Crow",
+    "site_brand": "EcoHero",
 
     # Logo to use for your site, must be present in static files, used for brand on top left
     # "site_logo": "books/img/logo.png",
@@ -346,14 +334,14 @@ JAZZMIN_SETTINGS = {
     "site_icon": None,
 
     # Welcome text on the login screen
-    "welcome_sign": "Welcome to Crow Admin",
+    "welcome_sign": "Welcome to EcoHero Admin",
 
     # Copyright on the footer
     # "copyright": "Acme Library Ltd",
 
     # List of model admins to search from the search bar, search bar omitted if excluded
     # If you want to use a single search field you dont need to use a list, you can use a simple string 
-    "search_model": ["auth.User", "auth.Group"],
+    # "search_model": ["auth.User", "auth.Group"],
 
     # Field name on user model that contains avatar ImageField/URLField/Charfield or a callable that receives the user
     "user_avatar": None,
