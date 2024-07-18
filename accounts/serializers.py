@@ -144,7 +144,6 @@ class ScanCountSerializer(serializers.ModelSerializer):
 
 class ImageSerializer(serializers.Serializer):
 
-    image = serializers.CharField(max_length=None)
+    image = serializers.CharField(max_length=None, required=True)
 
 
-    
