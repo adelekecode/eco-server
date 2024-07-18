@@ -55,25 +55,26 @@ waste_mapping = {
 
 
 
-
-
 def generate_description(image):
+    
+    prompt = (
+        "Identify the waste type in the image and classify it under the following categories: "
+        "'green', 'blue', or 'black'. Only provide the waste type and its classification without any additional description. "
+        "For example, if the waste type is 'apple', respond with 'apple: green'."
+    )
 
-
-    input={
+    input = {
         "image": image,
         "top_p": 1,
-        "prompt": f"Identify the waste type in the image. The waste type one out of {waste_mapping} give the type as key and the value associated with the key is the waste item. For example, if the waste type is 'apple', your response should be 'The item is an 'apple' and classified as 'green'.",
+        "prompt": prompt,
         "max_tokens": 1024,
         "temperature": 0.2
     }
     
     output = client.run(
-
         "yorickvp/llava-13b:b5f6212d032508382d61ff00469ddda3e32fd8a0e75dc39d8a4191bb742157fb",
         input=input
-
-        )
+    )
 
     return "".join(output)
 
