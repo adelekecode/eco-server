@@ -13,28 +13,6 @@ client = replicate.Client(api_token=api_token)
 
 
 
-def generate_description(image):
-
-
-    input={
-        "image": image,
-        "top_p": 1,
-        "prompt": "explain what you see in the image in a clinical note format.",
-        "max_tokens": 1024,
-        "temperature": 0.2
-    }
-    
-    output = client.run(
-
-        "yorickvp/llava-13b:b5f6212d032508382d61ff00469ddda3e32fd8a0e75dc39d8a4191bb742157fb",
-        input=input
-
-        )
-
-    return "".join(output)
-
-
-
 waste_mapping = {
     # Green Bin (Food Waste)
     'apple': 'green',
@@ -74,3 +52,28 @@ waste_mapping = {
     'used napkin': 'black',
     'greasy pizza box': 'black',
 }
+
+
+
+
+
+def generate_description(image):
+
+
+    input={
+        "image": image,
+        "top_p": 1,
+        "prompt": f"Identify the waste type in the image and provide a description. The waste type is: , and it is one out of {waste_mapping}",
+        "max_tokens": 1024,
+        "temperature": 0.2
+    }
+    
+    output = client.run(
+
+        "yorickvp/llava-13b:b5f6212d032508382d61ff00469ddda3e32fd8a0e75dc39d8a4191bb742157fb",
+        input=input
+
+        )
+
+    return "".join(output)
+
