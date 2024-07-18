@@ -41,4 +41,4 @@ def upload_file(raw: str) -> str:
         return response.get("secure_url")
     
     except Exception as e:
-        raise ValidationError({"message": "Error uploading file"})
+        raise ValidationError({"message": "Error uploading file", "error": str(e)})
