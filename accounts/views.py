@@ -316,10 +316,16 @@ class ApproximateImage(APIView):
             image = upload_file(serializers.validated_data['image'])
 
             note = generate_description(image)
+            code = ['green', 'blue', 'black']
+            for c in code:
+                if c in note:
+                    color = c
+                    break
 
             data = {
                 'image_url': image,
-                'description': note
+                'description': note,
+                'color': color
             }
 
             return Response(data, status=status.HTTP_200_OK)
