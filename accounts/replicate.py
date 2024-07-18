@@ -63,7 +63,7 @@ def generate_description(image):
     input={
         "image": image,
         "top_p": 1,
-        "prompt": f"Identify the waste type in the image. The waste type one out of {waste_mapping} give the type as key and the value associated with the key is the waste item. For example, if the waste item is 'apple', the waste type is 'green'.",
+        "prompt": f"Identify the waste type in the image. The waste type one out of {waste_mapping} give the type as key and the value associated with the key is the waste item. For example, if the waste type is 'apple', your response should be 'The item is an 'apple' and classified as 'green'.",
         "max_tokens": 1024,
         "temperature": 0.2
     }
