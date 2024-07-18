@@ -43,8 +43,31 @@ class TeamsAdmin(admin.ModelAdmin):
     
     owners.short_description = "Number of Users"    
     
+
+
+
+class ScanCountAdmin(admin.ModelAdmin):
+    list_display = ["user", "team", "count", "created_at", "updated_at"]
+    list_filter = ["team"]
+    search_fields = ["user__email", "team__name"]
+
+    def team(self, obj):
+        return obj.team.name if obj.team else "Not a team"
+    
+    team.short_description = "Team Name"
+    
+    def user(self, obj):
+        return obj.user.email if obj.user else "No User"
+    
+    user.short_description = "User Email"
+
+    def count(self, obj):
+        return obj.count
+    
+
 admin.site.unregister(models.OutstandingToken)
 admin.site.register(models.OutstandingToken, CustomOutstandingTokenAdmin)
 
 admin.site.register(Teams, TeamsAdmin)
 
+admin.site.register(ScanCount, ScanCountAdmin)
