@@ -304,8 +304,8 @@ def leave_team(request, pk):
 
 class ApproximateImage(APIView):
 
-    # permission_classes = [IsAuthenticated]
-    # authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
 
 
     def post(self, request):
@@ -314,6 +314,31 @@ class ApproximateImage(APIView):
 
         if serializers.is_valid():
             image = upload_file(serializers.validated_data['image'])
+
+            team = request.GET.get('team', None)
+            if team:
+                try:
+                    team_obj = Teams.objects.get(slug=team)
+                except Teams.DoesNotExist:
+                    return Response({"error": "team not found"}, status=400)
+                
+                scan_count = ScanCount.objects.filter(team=team_obj, user=request.user)
+                if scan_count:
+                    scan_count = scan_count[0]
+                    scan_count.count += 1
+                    scan_count.save()
+                else:
+                    scan_count = ScanCount(team=team_obj, user=request.user, count=1)
+                    scan_count.save()
+            else:
+                scan_count = ScanCount.objects.filter(user=request.user)
+                if scan_count:
+                    scan_count = scan_count[0]
+                    scan_count.count += 1
+                    scan_count.save()
+                else:
+                    scan_count = ScanCount(user=request.user, count=1)
+                    scan_count.save()
 
             note = generate_description(image)
             code = ['green', 'blue', 'black']
