@@ -137,3 +137,14 @@ class ScanCountSerializer(serializers.ModelSerializer):
     class Meta:
         model = ScanCount
         fields = "__all__"
+
+
+
+
+
+class ImageSerializer(serializers.Serializer):
+
+    image = serializers.CharField(max_length=None)
+
+
+    

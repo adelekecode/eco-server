@@ -16,6 +16,8 @@ from django.contrib.auth.signals import user_logged_in, user_logged_out
 from rest_framework.decorators import action
 from djoser.views import UserViewSet
 from .emails import *
+from .helpers.generators import *
+from accounts.replicate import *
 from rest_framework.views import APIView
 from django.contrib.auth.hashers import check_password
 from django.db.models import Q
@@ -294,4 +296,35 @@ def leave_team(request, pk):
         team.save()
         
         return Response({"message": "success"}, status=200)
+
+
+
+
+
+
+class ApproximateImage(APIView):
+
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = [JWTAuthentication]
+
+
+    def post(self, request):
+
+        serializers = ImageSerializer(data=request.data)
+
+        if serializers.is_valid():
+            image = upload_file(serializers.validated_data['image'])
+
+            note = generate_description(image)
+
+            data = {
+                'image_url': image,
+                'description': note
+            }
+
+            return Response(data, status=status.HTTP_200_OK)
+
+
+
+
 

@@ -20,6 +20,7 @@ urlpatterns = [
     path('teams/join/', views.join_team),
     path('teams/list/', views.user_teams),
     path('teams/<uuid:pk>/leave/', views.leave_team),
+    path('scan/upload/', views.ApproximateImage.as_view()),
 
 
 ]
