@@ -59,7 +59,7 @@ def generate_description(image):
 
     prompt = (
         "Identify the waste type in the image and classify it under the following categories: "
-        "'green', 'blue', or 'black'. Only provide the waste type and its classification without any additional description. "
+        f"'green', 'blue', or 'black'. Only provide the waste type and its classification without any additional description. using the schema here as a guide {waste_mapping} "
         "For example, if the waste type is 'apple', respond with 'The waste type is apple and classified as green'."
     )
 
