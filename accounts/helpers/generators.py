@@ -26,7 +26,7 @@ def generate_code(n):
 
 
 
-def upload_file(raw: str) -> str:
+def upload_file(raw) -> str:
     
     try:
         cloudinary.config(
