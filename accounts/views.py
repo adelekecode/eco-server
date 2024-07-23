@@ -259,11 +259,11 @@ def join_team(request):
         # if request.user.team >= 2:
         #     return Response({"error": "you can't join more than two teams"}, status=400)
 
-        if Teams.object.filter(users=request.user).count() >= 4:
+        if Teams.objects.filter(users=request.user).count() >= 4:
             return Response({"error": "you can't join more than four teams"}, status=400)
 
         
-        team = Teams.object.filter(key=key, is_deleted=False)
+        team = Teams.objects.filter(key=key, is_deleted=False)
         if team is None:
             return Response({"error": "invalid key"}, status=400)
         
