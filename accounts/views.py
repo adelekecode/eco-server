@@ -74,6 +74,7 @@ def user_auth(request):
         if serializer.is_valid():
             data = serializer.validated_data
             email = data['email']
+            email = str(email).lower()
             if User.objects.filter(email=email).exists():
                 if not User.objects.filter(email=email, is_active=True).exists():
                     return Response({"error": "user is not active"}, status=400)
@@ -303,6 +304,52 @@ def leave_team(request, pk):
         team.save()
         
         return Response({"message": "success"}, status=200)
+
+
+class ConfirmBinView(APIView):
+
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    @swagger_auto_schema(method='post', request_body=BinDataSerializer())
+    @action(detail=False, methods=['POST'])
+    def post(self, request):
+        serializer = BinDataSerializer(data=request.data)
+
+        data = serializer.validated_data
+
+        team = request.GET.get('team', None)
+
+        color = data['color']
+        bn_color = data['bin_color']
+
+        if team is None:
+
+            if color == bn_color:
+
+                request.user.points += 1
+                request.user.save()
+
+                return Response({"message": "success"}, status=200)
+            else:
+                return Response({"error": "color does not match"}, status=400)
+            
+        else:
+            if color == bn_color:
+                try:
+                    team_obj = Teams.objects.get(key=team)
+                except Teams.DoesNotExist:
+                    return Response({"error": "team not found"}, status=400)
+                
+                request.user.points += 3
+                request.user.save()
+
+
+                return Response({"message": "success"}, status=200)
+
+
+           
+
 
 
 @api_view(['POST'])

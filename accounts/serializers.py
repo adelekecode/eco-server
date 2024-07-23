@@ -147,3 +147,9 @@ class ImageSerializer(serializers.Serializer):
     image = serializers.ImageField()
 
 
+
+class BinDataSerializer(serializers.Serializer):
+
+    bin_color = serializers.CharField(max_length=100, required=True)
+    color = serializers.CharField(max_length=100, required=True)
+    
