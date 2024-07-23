@@ -317,6 +317,7 @@ class ConfirmBinView(APIView):
     @action(detail=False, methods=['POST'])
     def post(self, request):
         serializer = BinDataSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
         data = serializer.validated_data
 
