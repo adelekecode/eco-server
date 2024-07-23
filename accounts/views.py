@@ -256,8 +256,11 @@ def join_team(request):
         if key is None:
             return Response({"error": "key is required"}, status=400)
         
-        if request.user.team >= 2:
-            return Response({"error": "you can't join more than two teams"}, status=400)
+        # if request.user.team >= 2:
+        #     return Response({"error": "you can't join more than two teams"}, status=400)
+
+        if Teams.object.filter(user=request.user).count() >= 4:
+            return Response({"error": "you can't join more than four teams"}, status=400)
 
         
         team = Teams.objects.filter(key=key, is_deleted=False)
@@ -287,8 +290,12 @@ def leave_team(request, pk):
         except Teams.DoesNotExist:
             return Response({"error": "team not found"}, status=400)
         
+        if request.user.id == team.user.id:
+            return Response({"error": "you can't leave your own team"}, status=400)
+        
         if not team.users.filter(id=request.user.id).exists():
             return Response({"error": "you're not a member of this team"}, status=400)
+      
         
         team.users.remove(request.user)
         request.user.teams -= 1
@@ -297,6 +304,24 @@ def leave_team(request, pk):
         
         return Response({"message": "success"}, status=200)
 
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def delete_team(request, pk):
+
+    if request.method == 'POST':
+        try:
+            team = Teams.objects.get(id=pk, is_deleted=False)
+        except Teams.DoesNotExist:
+            return Response({"error": "team not found"}, status=400)
+        
+        if request.user.id!= team.user.id:
+            return Response({"error": "you can't delete this team"}, status=400)
+        
+        team.delete()
+
+        return Response({"message": "success"}, status=200)
 
 
 

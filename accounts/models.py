@@ -194,7 +194,6 @@ class Teams(models.Model):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
-
     
 
 
