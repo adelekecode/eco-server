@@ -22,6 +22,7 @@ urlpatterns = [
     path('teams/<uuid:pk>/leave/', views.leave_team),
     path('teams/<uuid:pk>/delete/', views.delete_team),
     path('scan/upload/', views.ApproximateImage.as_view()),
-    path('scan/confirm-bin/', views.ConfirmBinView.as_view())
+    path('scan/confirm-bin/', views.ConfirmBinView.as_view()),
+    path('scan/list/', views.ScansView.as_view()),
 
 ]

@@ -211,4 +211,12 @@ class ScanCount(models.Model):
     is_deleted = models.BooleanField(default=False)
 
 
-    
+
+
+class Scans(models.Model):
+
+    id = models.UUIDField(primary_key=True, unique=True, editable=False, default=uuid.uuid4)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    meta = models.JSONField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

@@ -153,3 +153,10 @@ class BinDataSerializer(serializers.Serializer):
     bin_color = serializers.CharField(max_length=100, required=True)
     color = serializers.CharField(max_length=100, required=True)
     
+
+
+class ScanSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Scans
+        fields = "__all__"

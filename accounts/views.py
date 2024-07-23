@@ -8,6 +8,7 @@ from drf_yasg.utils import swagger_auto_schema
 from django.contrib.auth import get_user_model
 from .helpers.generators import generate_password
 from rest_framework.exceptions import *
+from rest_framework.generics import *
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework.permissions import IsAuthenticated
@@ -22,6 +23,7 @@ from rest_framework.views import APIView
 from django.contrib.auth.hashers import check_password
 from django.db.models import Q
 import random
+from rest_framework.pagination import LimitOffsetPagination
 from django.utils.text import slugify
 import string
 import requests
@@ -424,6 +426,11 @@ class ApproximateImage(APIView):
                 'description': note,
                 'color': color
             }
+            Scans.objects.create(
+                user=request.user,
+                meta = data
+
+            )
 
             return Response(data, status=status.HTTP_200_OK)
         else:
@@ -433,3 +440,28 @@ class ApproximateImage(APIView):
 
 
 
+
+class ScansView(ListAPIView):
+
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    serializer_class = ScanSerializer
+    queryset = Scans.objects.filter()
+    pagination_class = LimitOffsetPagination
+
+    def get_queryset(self):
+        user = self.request.user
+        
+        return Scans.objects.filter(user=user)
+    
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        
+        return Response(serializer.data)
+    
