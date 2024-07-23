@@ -264,7 +264,7 @@ def join_team(request):
 
         
         team = Teams.objects.filter(key=key, is_deleted=False)
-        if team is None:
+        if team.count() == 0:
             return Response({"error": "invalid key"}, status=400)
         
         if team[0].users.filter(id=request.user.id).exists():
