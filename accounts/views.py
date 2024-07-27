@@ -466,7 +466,7 @@ class UserStatsView(APIView):
 
         data = {
             'monthly_scans': scans,
-            'total_scans': user_scans.count if user_scans else 0,
+            'total_scans': user_scans[0].count if user_scans else 0,
             'teams': teams,
             'points': points,
             'ranking': ranking
