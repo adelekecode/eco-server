@@ -29,6 +29,9 @@ import string
 import requests
 from datetime import datetime
 import os
+from django.utils import timezone
+from datetime import timedelta
+from dateutil.relativedelta import relativedelta
 
 
 
@@ -453,13 +456,13 @@ class UserStatsView(APIView):
     def get(self, request):
         user = request.user
 
-        current_month = datetime.now().month
-        last_month = current_month - 1
-        start_date = datetime.now().replace(day=1, month=last_month)
-        end_date = datetime.now().replace(day=1, month=current_month)
+        now = timezone.now()
+        first_day_of_current_month = now.replace(day=1)
+        start_date = first_day_of_current_month - relativedelta(months=1)
+        end_date = first_day_of_current_month
 
         scans = Scans.objects.filter(created_at__range=[start_date, end_date]).count()
-        teams = Teams.objects.filter(users=user).count()
+        teams = Teams.objects.filter(users=user).distinct().count()
         user_scans = Scans.objects.filter(user=user).count()
         points = user.points
         ranking = User.objects.filter(points__gt=user.points).count() + 1
