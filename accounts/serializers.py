@@ -31,11 +31,10 @@ class UserDeleteSerializer(serializers.Serializer):
 
 class CustomUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(style={"input_type": "password"}, write_only=True, required=False)
-    image_url = serializers.ReadOnlyField()
     
     class Meta():
         model = User
-        fields = ['id',"first_name", "last_name", "email", "is_active", "role", "is_superuser", "date_joined"]
+        fields = ['id', "email", "points", "role", "date_joined"]
 
 
 class LoginSerializer(serializers.Serializer):
