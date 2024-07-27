@@ -10,9 +10,6 @@ router.register(r'users', views.CustomUserViewSet, basename="user")
 
 
 urlpatterns = [
-    # path('auth/', include(router.urls)),
-    # path('auth/', include('djoser.urls.jwt')),
-    # path('auth/admin/', views.AdminListCreateView().as_view()),
     path('auth/token/', views.user_auth, name="login_view"),
     path("auth/logout/", views.logout_view, name="logout_view"),
     path('auth/verify/', views.otp_verification),
@@ -24,5 +21,7 @@ urlpatterns = [
     path('scan/upload/', views.ApproximateImage.as_view()),
     path('scan/confirm-bin/', views.ConfirmBinView.as_view()),
     path('scan/list/', views.ScansView.as_view()),
+    path('scans/user/', views.UserStatsView.as_view()),
+    path('leaderboard/', views.LeaderBoard.as_view()),
 
 ]

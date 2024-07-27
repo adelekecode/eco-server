@@ -27,6 +27,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from django.utils.text import slugify
 import string
 import requests
+from datetime import datetime
 import os
 
 
@@ -42,27 +43,6 @@ def gen_key(n):
     alphabet = string.ascii_letters
     code = ''.join(random.choice(alphabet) for i in range(n))
     return str(code).lower()
-
-
-
-class CustomUserViewSet(UserViewSet):
-    queryset = User.objects.filter(is_deleted=False)
-    authentication_classes = [JWTAuthentication]
-    
-    def list(self, request, *args, **kwargs):
-        queryset = self.queryset.filter(role="user")
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_Response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-
-        return Response(serializer.data)
-
-    
-    
 
 
 @swagger_auto_schema(method='post', request_body=LoginSerializer())
@@ -412,7 +392,7 @@ class ApproximateImage(APIView):
                     scan_count.count += 1
                     scan_count.save()
                 else:
-                    scan_count = ScanCount(user=request.user, count=1)
+                    scan_count = ScanCount(user=request.user, count=1) 
                     scan_count.save()
 
             note = generate_description(image)
@@ -439,15 +419,12 @@ class ApproximateImage(APIView):
 
 
 
-
-
-
 class ScansView(ListAPIView):
 
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
     serializer_class = ScanSerializer
-    queryset = Scans.objects.filter()
+    queryset = Scans.objects.filter().order_by('-created_at')
     pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
@@ -465,4 +442,51 @@ class ScansView(ListAPIView):
         serializer = self.get_serializer(queryset, many=True)
         
         return Response(serializer.data)
+
+
+
+class UserStatsView(APIView):
+
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def get(self, request):
+        user = request.user
+
+        current_month = datetime.now().month
+        last_month = current_month - 1
+        start_date = datetime.now().replace(day=1, month=last_month)
+        end_date = datetime.now().replace(day=1, month=current_month)
+
+        scans = Scans.objects.filter(created_at__range=[start_date, end_date]).count()
+        teams = Teams.objects.filter(users=user).count()
+        user_scans = ScanCount.objects.filter(user=user)
+        points = user.points
+        ranking = User.objects.filter().order_by()
+
+        data = {
+            'monthly_scans': scans,
+            'total_scans': user_scans.count if user_scans else 0,
+            'teams': teams,
+            'points': points,
+            'ranking': ranking
+        }
+
+        return Response(data, status=200)
+    
+
+class LeaderBoard(APIView):
+
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+
+
+    def get(self, request):
+            
+        users = User.objects.all().order_by('-points')[:10]
+        data = CustomUserSerializer(users, many=True)
+
+        return Response(data.data, status=200)
+           
     
