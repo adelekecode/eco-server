@@ -30,7 +30,7 @@ class UserDeleteSerializer(serializers.Serializer):
     current_password = serializers.CharField(style={"input_type": "password"})
 
 class CustomUserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(style={"input_type": "password"}, write_only=True, required=False)
+    # password = serializers.CharField(style={"input_type": "password"}, write_only=True, required=False)
     
     class Meta():
         model = User
