@@ -460,13 +460,13 @@ class UserStatsView(APIView):
 
         scans = Scans.objects.filter(created_at__range=[start_date, end_date]).count()
         teams = Teams.objects.filter(users=user).count()
-        user_scans = ScanCount.objects.filter(user=user)
+        user_scans = Scans.objects.filter(user=user).count()
         points = user.points
         ranking = User.objects.filter().order_by()
 
         data = {
             'monthly_scans': scans,
-            'total_scans': user_scans[0].count if user_scans else 0,
+            'total_scans': user_scans,
             'teams': teams,
             'points': points,
             'ranking': ranking
