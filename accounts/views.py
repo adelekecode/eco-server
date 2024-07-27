@@ -462,7 +462,7 @@ class UserStatsView(APIView):
         teams = Teams.objects.filter(users=user).count()
         user_scans = Scans.objects.filter(user=user).count()
         points = user.points
-        ranking = User.objects.filter().order_by()
+        ranking = User.objects.filter(points__gt=user.points).count() + 1
 
         data = {
             'monthly_scans': scans,
