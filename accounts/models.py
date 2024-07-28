@@ -197,7 +197,7 @@ class Teams(models.Model):
     @property
     def owner(self):
         return {
-            "owner": self.user.email
+            "email": self.user.email
         }
 
     
