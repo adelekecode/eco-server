@@ -119,6 +119,8 @@ class NewOtpSerializer(serializers.Serializer):
 
 class TeamSerializer(serializers.ModelSerializer):
 
+    owner = serializers.ReadOnlyField()
+
 
     class Meta:
         model = Teams

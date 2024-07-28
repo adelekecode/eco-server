@@ -194,6 +194,12 @@ class Teams(models.Model):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
+    @property
+    def owner(self):
+        return {
+            "owner": self.user.email
+        }
+
     
 
 
