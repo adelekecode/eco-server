@@ -454,6 +454,7 @@ class UserStatsView(APIView):
     authentication_classes = [JWTAuthentication]
 
     def get(self, request):
+
         user = request.user
 
         now = timezone.now()
@@ -462,7 +463,9 @@ class UserStatsView(APIView):
         end_date = first_day_of_current_month
 
         scans = Scans.objects.filter(created_at__range=[start_date, end_date]).count()
+        
         teams = Teams.objects.filter(users=user).distinct().count()
+        
         user_scans = Scans.objects.filter(user=user).count()
         points = user.points
         ranking = User.objects.filter(points__gt=user.points).count() + 1
